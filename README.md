@@ -23,13 +23,17 @@ check-in-based signal read healthy) that this exists to catch.
 ## Run
 
     docker run -d --name patchmon-exporter --restart unless-stopped \
-      -p 9823:9823 \
+      -p 9820:9820 \
       --network patchmon-internal \
-      -e PATCHMON_DB_HOST=patchmon-database-1 \
-      -e PATCHMON_DB_USER=patchmon_exporter \
-      -e PATCHMON_DB_PASSWORD=<password> \
-      -e PATCHMON_DB_NAME=patchmon_db \
+      -v /path/to/patchmon-dsn:/run/secrets/patchmon-dsn:ro \
       patchmon-exporter:latest
 
-Scrape `:9823/metrics` with Prometheus. Needs network access to PatchMon's
+The DSN file (default path `/run/secrets/patchmon-dsn`, override with
+`PATCHMON_DSN_FILE`) holds a standard Postgres connection string, e.g.
+`host=patchmon-database-1 port=5432 dbname=patchmon_db user=patchmon_exporter password=...`,
+for a dedicated read-only role — never bake the DSN into the image or a
+plain env var. `LISTEN_PORT` (default 9820) and `CACHE_SECONDS` (default
+60) are also overridable via env.
+
+Scrape `:9820/metrics` with Prometheus. Needs network access to PatchMon's
 Postgres instance — join its internal docker network or expose the DB port.

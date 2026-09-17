@@ -43,13 +43,13 @@ COUNTING THE SET, NOT PROBING ITS MEMBERS
 SIZE of the inventory rather than against per-host series. A per-host rule can
 only fire for a host whose series exists; when a host is deleted from PatchMon,
 or was never enrolled, its series simply stops and the rule goes quiet with no
-config change and no notification. The estate has been bitten by exactly this
-narrowing before (the 41-day expired vpsgb.co.uk certificate). Alert on the
-count and a vanished host is a change in a number, which is visible.
+config change and no notification -- a fleet can go a long time unpatched
+before anyone notices the alert itself went quiet. Alert on the count and a
+vanished host is a change in a number, which is visible.
 
 `patchmon_host_enrolled` deliberately emits a series for hosts in `pending`
-state -- the ghost records that never completed enrolment. There are five of
-them here (tower.local, aapanel, Mini1.local, a duplicate Pi4.local, Manjaro),
+state -- the ghost records that never completed enrolment. It's not unusual
+to have a handful of these on a real fleet,
 each of which has looked like "a host PatchMon knows about" for ~70 days while
 being monitored by nothing at all. Silence about them is the failure.
 
